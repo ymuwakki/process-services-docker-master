@@ -50,4 +50,4 @@ echo $version
 echo "Downloading Activiti Admin war file..."
 mvn -DACTIVITI_VERSION=${version} clean package
 
-docker build --squash -f ./Dockerfile --build-arg ACTIVITI_VERSION=${version} -t process-services-admin:${version} ${scriptdir}
+docker build -f ./Dockerfile --build-arg ACTIVITI_VERSION=${version} -t process-services-admin:${version} ${scriptdir}

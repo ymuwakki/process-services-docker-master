@@ -42,7 +42,7 @@
 <repositories>
     <repository>
         <id>activiti-enterprise-releases</id>
-        <url>https://artifacts.alfresco.com/nexus/content/repositories/activiti-enterprise-releases</url>
+        <url>https://armedia:Alfresco123@artifacts.alfresco.com/nexus/content/repositories/activiti-enterprise-releases</url>
     </repository>
 </repositories>
 

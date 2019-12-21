@@ -23,6 +23,28 @@ RUN yum install openssl -y && \
     yum autoremove -y && \
     yum clean all
 
+# Install Socium certs
+
+# dod_sw_ca53.cer
+# dsca.mil.cer
+# root_ca_3.cer
+# solers.socium.dsca.mil.cer
+
+ARG JAVA_HOME=/usr/java/default
+ARG TOMCAT_DIR=/usr/local/tomcat
+
+RUN mkdir -p $TOMCAT_DIR/socium_certs
+
+COPY activiti-app/artifacts/_certs/dod_sw_ca53.cer $TOMCAT_DIR/socium_certs/.
+COPY activiti-app/artifacts/_certs/dsca.mil.cer $TOMCAT_DIR/socium_certs/.
+COPY activiti-app/artifacts/_certs/root_ca_3.cer $TOMCAT_DIR/socium_certs/.
+COPY activiti-app/artifacts/_certs/solers.socium.dsca.mil.cer $TOMCAT_DIR/socium_certs/.
+
+RUN $JAVA_HOME/bin/keytool -importcert -noprompt -alias "dsca.mil.cer" -file $TOMCAT_DIR/socium_certs/dsca.mil.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts
+RUN $JAVA_HOME/bin/keytool -importcert -noprompt -alias "solers.socium.dsca.mil" -file $TOMCAT_DIR/socium_certs/solers.socium.dsca.mil.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts
+RUN $JAVA_HOME/bin/keytool -importcert -noprompt -alias "dod_sw_ca53" -file $TOMCAT_DIR/socium_certs/dod_sw_ca53.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts
+RUN $JAVA_HOME/bin/keytool -importcert -noprompt -alias "root_ca_3" -file $TOMCAT_DIR/socium_certs/root_ca_3.cer -storepass changeit -keystore $JAVA_HOME/jre/lib/security/cacerts
+
 # Docker layerization is procedural. This means that each directive is a layer, executed in the sequence in which it is presented.
 # If a layer changes, it invalidates all subsequent layers.
 # The EXPOSE, CMD and ENV layers are the ones least likely to change and they normally remain on top to reduce build time.

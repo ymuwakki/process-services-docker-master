@@ -51,4 +51,20 @@ echo $version
 echo "Downloading Activiti App war file..."
 mvn -DACTIVITI_VERSION=${version} clean package
 
+# Update with custom Socium stuff
+
+rm -rf extension
+mkdir -p extension/WEB-INF/lib
+mkdir -p extension/WEB-INF/classes/activiti
+cp ./artifacts/AuthClient-1.0-SNAPSHOT.jar extension/WEB-INF/lib
+cp ./artifacts/camel-http4-2.15.2.jar extension/WEB-INF/lib
+cp ./artifacts/httpmime-4.3.2.jar extension/WEB-INF/lib
+cp ./artifacts/json-20190722.jar extension/WEB-INF/lib
+cp ./artifacts/whitelisted-scripts.conf  extension/WEB-INF/classes/activiti
+cp ./artifacts/*.zip  extension/WEB-INF/classes/.
+cd extension
+jar -uvf ../activiti-app.war WEB-INF
+cd ..
+
+pwd
 docker build -f ./Dockerfile --build-arg ACTIVITI_VERSION=${version} -t process-services:${version} ${scriptdir}
